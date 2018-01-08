@@ -1,0 +1,33 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+<link href="~/css/login.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="card card-container">
+        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        <p id="profile-name" class="profile-name-card"></p>
+        <form class="form-signin" method="post">
+
+            <div asp-validation-summary="ModelOnly"></div>
+            
+            <input type="email" class="form-control" placeholder="Email address" autofocus asp-for="UserName">
+            <span asp-validation-for="UserName" class="text-warning"></span>
+
+            <input type="password" class="form-control" placeholder="Password" asp-for="Password">
+            <span asp-validation-for="Password" class="text-warning"></span>
+
+            <div id="remember" class="checkbox">
+                <label>
+                    <input type="checkbox" asp-for="RememberMe"> Remember me
+                </label>
+            </div>
+
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+        </form><!-- /form -->
+        <a href="#" class="forgot-password">
+            Forgot the password?
+        </a>
+    </div><!-- /card-container -->
+</div><!-- /container -->

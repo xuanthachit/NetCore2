@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="card card-container">
+        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        <p id="profile-name" class="profile-name-card"></p>
+
+        <div class="alert alert-warning" *ngIf="errorMessage">{{errorMessage}}</div>
+
+        <form class="form-signin" (submit)="onLogin()" #theForm="ngForm" novalidate>
+
+            <input type="email" class="form-control" placeholder="Email address" autofocus name="username" #username="ngModel" [(ngModel)]="creds.username" required>
+            <div class="text-danger" *ngIf="username.touched && username.invalid && username.errors.required">Username is required</div>
+
+            <input type="password" class="form-control" placeholder="Password" name="password" #password="ngModel" [(ngModel)]="creds.password" required>
+            <div class="text-danger" *ngIf="password.touched && password.invalid && password.errors.required">Password is required</div>
+
+            <div id="remember" class="checkbox">
+                <label>
+                    <input type="checkbox"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" [disabled]="theForm.invalid">Sign in</button>
+        </form><!-- /form -->
+
+        <a routerLink="/" class="btn btn-default"> Cancel</a>
+
+        <br/>
+
+        <a href="#" class="forgot-password">
+            Forgot the password?
+        </a>
+    </div><!-- /card-container -->
+</div><!-- /container -->

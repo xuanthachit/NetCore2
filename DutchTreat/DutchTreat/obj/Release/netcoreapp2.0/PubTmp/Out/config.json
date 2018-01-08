@@ -1,0 +1,17 @@
+﻿{
+  "DisableSSL":  false,
+  "ConnectionStrings": {
+    "DutchConnectionString": "Server=(localdb)\\ProjectsV13;Database=MyDatabase;Integrated Security=true;MultipleActiveResultSets=true"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning"
+    }
+  },
+  "Tokens": {
+    "Key": "dsads;dsadas;dsadsa;dsafdsfd;fdsgdf",
+    "Issuer": "localhost",
+    "Audience": "Audience"
+  }
+}

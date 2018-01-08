@@ -1,0 +1,50 @@
+- Install Angular CLI to project
+	npm install -g @angular/cli
+- Check angularCLI version
+	ng -v
+- Create new angular project
+	ng new dutch-app --minimal (--dry-run)
+		-> dry-run allows it to tell you what it's going to build without
+		   actually building
+- Build project
+	ng build
+	ng build --watch (recompilation when change)
+- Run project
+	ng serve
+- RxJS
+	https://kipalog.com/posts/Cung-Hoc-Angular-2--Can-ban-ve-RxJS-trong-Angular-2
+- Using HTTP
+- Using type Safely
+	+ shape data
+- Shared data across component
+	Use DataService
+- Using Calculated Data
+	calculated value, not a simple value --> Can:
+		import * as _ from "lodash";
+		in package.json ---> add  "lodash": "^4.17.4"
+- Add routing to the project
+	in view html use: routerLink
+- Support Login
+	we using API by token not cookies
+- Use form binding
+	We need using: 
+		import { FormsModule } from "@angular/forms";
+	Two-way binding 
+- Form validation
+	#feildname="ngModel"
+	#formName="ngForm"
+	*ngIf: show error
+	[disable]="formname.Invalid"
+	While we're here on the form we also want to add "novalidate"
+- Use toke Authentication
+	import Headers from "@angular/http";
+	EX:	
+		return this.http.post("/api/orders", this.order, {
+                  headers: new Headers({ "Authorization": "Bearer " + this.token })
+                })
+                    .map(response => {
+                    this.order = new Order();
+                    return true;
+                });
+	
+	

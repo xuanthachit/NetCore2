@@ -1,0 +1,223 @@
+ ---------- Enable EntityframeworkCore.Tools.DotNet -----------
+Edit project -> add ItemGroup
+	<DotNetCliToolReference Include="Microsoft.EntityframeworkCore.Tools.DotNet" Version="2.0.1" />
+-> Rebuild
+-> use command line: dotnet ef
+
+----------------- Use dependency in NetCore --------------
+	Add service in ConfigurationServices Method
+	- services.Addtransient<>() :
+	- services.AddSingleTon<>() :
+	- services.AddScoped<>() :
+---------------- Tell the project that we want to use my context ---------
+	Add service in ConfigurationServices Method
+	- services.AddDbContext<DutchContext>(cfg => {
+                cfg.UseSqlServer(_configuration.GetConnectionString("ConnectionString"));
+            });
+------------- Using configuration in startup ----------
+	private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
+--------------------- Removing the default configuration options -------------
+ WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(SetupConfiguration)
+-----
+private static void SetupConfiguration(WebHostBuilderContext ctx, IConfigurationBuilder builder)
+        {
+            builder.Sources.Clear();
+        }
+----> add config.json include connectionString
+-----> Add contructor in DbContext
+	public DutchContext(DbContextOptions<DutchContext> options) : base(options)
+        {
+        }
+
+---------> Run command create database in SQLServer
+	dotnet ef database update
+--------> Migrate database
+	dotnet ef migrations add InitialDb
+--------------NOTE: when the Migration created, move Migration folder into Data folder and run "dotnet ef database update" again
+All table will create in your database
+
+----------------------------------- Seeding the database --------------------------------------
+
+------------------------------- Logging Error ----------------------------
+using Microsoft.Extensions.Logging;
+
+
+----------------- Create the API with ASP MVC -----------------------
+If Model in Entities have error (when you view Error in Output -> Asp NetCore Web server
+Newtonsoft.Json.JsonSerializationException: Self referencing loop detected for property 'order' with type 'DutchTreat.Data.Entities.Order'. Path '[0].items[0]'.
+
+---> Fix
+	services.AddMvc()
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore );
+
+------------------------ Auto Mapper ---------------------------------
+// If two MODEL not the same properties, you should use Mapping Profile
+        public DutchMappingProfile()
+        {
+            //CreateMap<Order, OrderViewModel>();
+
+            // Mapping with Property not similar
+            CreateMap<Order, OrderViewModel>()
+                .ForMember(o => o.OrderId, ex => ex.MapFrom(o => o.Id));
+
+        }
+
+	------------------- ReverseMap ------------------------------------
+
+	CreateMap<Order, OrderViewModel>()
+                .ForMember(o => o.OrderId, ex => ex.MapFrom(o => o.Id))
+                .ReverseMap();
+
+
+---------------------------- Create association controller----------------------------
+[Route("api/orders/{orderid}/items")]
+------------------------ Using query string for APIs -----------------------
+
+
+
+----------------------------- ASP .NetCore Identity ------------------------------
+	- Create custome feild of User base IdentityUser
+	- DutchContext: 	base IdentityDbContext<StoreUsers>
+		public class DutchContext: IdentityDbContext<StoreUsers>
+	- Migration db
+		dotnet ef migrations add Identity
+	- Drop the database
+		dotnet ef database drop
+	- Create seed data
+	- Configuration identity
+		// Add Identity
+            services.AddIdentity<StoreUsers, IdentityRole>( cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                //cfg.Password.RequireDigit = true;
+            })
+            .AddEntityFrameworkStores<DutchContext>();
+	- Enable Authentication: is the pipline, so you really need authentication before MVC in StartUp -> Configure
+		app.UseAuthentication();
+	- When hit a error you can readd migrations and update database
+
+
+---------------------------------------- Login -----------------------------
+	SignInManager
+	- Required HTTPS
+		Should inplement IHostingEnvironment
+		If you want to use env.IsDevelopment() or env.IsProduction() to check Environment then you should declare IHostingEnviroment in contructor,
+			But ConfigureServices() dosen't support IHostingEnviroment, then you can declare IHostingEnviroment in Startup Contructor
+				public Startup(IConfiguration configuration, IHostingEnvironment env)
+        			public Startup(IConfiguration configuration, IHostingEnvironment env)
+        			{
+            				this._configuration = configuration;
+            				this.env = env;
+        			}
+
+The Edit service.AddMVC like this:
+		services.AddMvc(opt => {
+                	if (this.env.IsProduction())
+                	{
+                    	opt.Filters.Add(new RequireHttpsAttribute());
+                	}
+                })
+                .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore ); 
+
+
+
+
+
+------------------------------------------ Use Identity in the API ---------------------------------------------
+Declare in ConfigureServices():
+
+ // Support tokens as well as the cookies
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(); 
+
+When anyone want to call the API with authorize, in controller add attribute like this:
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+In the AccountController, create function generate Tokens
+	If you want to use KEY to generation Token, you should declare IConfiguration in Contructor
+	public AccountController(ILogger<AccountController> logger,
+            SignInManager<StoreUsers> signInManager,
+            UserManager<StoreUsers> userManager,
+            IConfiguration config)
+        {
+            this.logger = logger;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.config = config;
+        }
+
+
+======================== Function Create Token =============================================
+
+[HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await this.userManager.FindByNameAsync(model.UserName);
+                if(user != null)
+                {
+                    var result = await this.signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+                    if (result.Succeeded)
+                    {
+                        // Create token
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"]));
+                        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                        var token = new JwtSecurityToken(
+                            this.config["Tokens:Issuer"],
+                            this.config["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.Now.AddMinutes(20),
+                            signingCredentials: creds
+                            );
+
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
+
+                        return Created("", results);
+                    }
+                }
+            }
+            return View();
+        }
+
+
+=============================> // Tell Startup about our token then go to ConfigureServices() function in start class edit // Support tokens as well as the cookies
+like this: 
+
+	 services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(
+                    // Tell Startup about our token
+                    cfg =>
+                    {
+                        cfg.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidIssuer = _configuration["Tokens:Issuer"],
+                            ValidAudience = _configuration["Tokens:Audience"],
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]))
+                    };
+                    }
+                ); 
+
+
+
+		

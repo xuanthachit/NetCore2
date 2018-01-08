@@ -1,0 +1,6 @@
+Summary: 
+	Identity can use existing or new DbContext
+	Authozire attribute support Views or API
+	Identity Configuration gives you full control
+	Can use Identity anywhere user can access
+

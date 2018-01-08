@@ -1,0 +1,17 @@
+﻿
+<div class=row>
+    <div class="product-info col-md-3" *ngFor="let p of products">
+        <div class="well well-sm">
+            <img src="/images/p1.jpg" [alt]="p.title" class="img-responsive"/>
+            <div class="product-name">{{p.category}} - {{p.size}}</div>
+            <ul>
+                <li><strong> Price:</strong> {{p.price | currency:"VND":true}}</li>
+                <li><strong> Artist:</strong> {{p.artist}}</li>
+                <li><strong> Title:</strong> {{p.title}}</li>
+                <li><strong> Description:</strong> {{p.artDesciption}}</li>
+            </ul>
+            <button id="btnBuy" class="btn btn-success btn-sm" (click)="addProduct(p)">Buy</button>
+        </div>
+    </div>
+</div>
+

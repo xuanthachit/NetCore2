@@ -1,0 +1,90 @@
+- Using Gulp and minifying your Javascript
+	In pakage.json add Gulp at node "Denpendencies"
+	Gulp help us automate build time tooling
+		"gulp": "^3.9.1"
+	Minify
+		"gulp-uglify": "~3.0.0",
+    
+		"gulp-concat": "2.6.1"
+	Run:
+		gulp
+		gulp minify
+		Task runner explore
+- Using Enviroment tag helper
+	easy debuggable js and in fact we'll change this to get the fully
+	debuggable Bootstrap and Jquery as well
+	So we have a nice version of all three that are going to show us and even allow
+	us to walk into the code if necessary
+	- asp-fallback-src: 
+		 <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+
+	------> Vi khong the luc nao cung cap nhat ban moi nhat thong qua may chu hay
+	 start-up
+	You're not going to actually have to download them from your server so startup
+	time is even more increased
+- Setting up Development Scripts
+	<Target Name="MyPublishScripts" BeforeTargets="BeforePublish">
+  	<Exec Command="npm install"></Exec>
+  	<Exec Command="bower install"></Exec>
+  	<Exec Command="gulp"></Exec>
+  	<Exec Command="ng build"></Exec>
+	</Target>
+
+----------------- OR --------------------------
+ <PropertyGroup>
+    <SetExternalToolsPath Condition="'$(ExternalToolsPath)' != ''">SET PATH=$(ExternalToolsPath) &amp;&amp; </SetExternalToolsPath>
+  </PropertyGroup>
+
+
+<Target Name="MyPublishScripts" BeforeTargets="BeforePublish">
+  <Exec Command="npm install" />
+  <Exec Command="$(SetExternalToolsPath)bower install" />
+  <Exec Command="$(SetExternalToolsPath)gulp" />
+  <Exec Command="ng build" />
+</Target>
+- Publish to a Directory
+	Before run app, you can edit config.json
+		"DisableSSL":  false,
+	And edit ConfigureServices() function 
+		services.AddMvc(opt => {
+                if (this.env.IsProduction() && _configuration["DisableSSL"] != "true")
+                {
+                    opt.Filters.Add(new RequireHttpsAttribute());
+                }
+            })
+            .AddJsonOptions(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore ); // Support return Json result
+
+	-----> Publish again
+	Go to IIS folder and open cmd:
+		set DisableSSL=true
+		--> Because the enviroment variables are going to override within our config.json
+
+	Then run:
+		dotnet DutchTreat.dll
+
+- Publish to Azure
+	...
+- Publish to IIS
+	In IIS
+		Noted: Run project with Administrator
+			Noted in image
+- Publish using the CLI
+	dotnet publish --help
+	dotnet publish -o C:\inetpub\dutchtreatCLI
+- Publish with Runtime
+	RID: Runtime Identifiers
+EX1: Edit in <PropertyGroup>
+	<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+Run:
+	dotnet publish -o C:\inetpub\dutchtreatCLI --self-contained
+	dutchtreat
+EX2: Edit in <PropertyGroup>
+	<RuntimeIdentifiers>win10-x64,OSX.10.10-x64</RuntimeIdentifiers>
+Run:
+	dotnet publish -o C:\inetpub\dutchtreatCLI --runtime osx.10.10-x64
+		

@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Product>
+
+@section Scripts{
+    <script src="~/ClientApp/dist/inline.bundle.js"></script>
+    <script src="~/ClientApp/dist/polyfills.bundle.js"></script>
+    <script src="~/ClientApp/dist/styles.bundle.js"></script>
+    <script src="~/ClientApp/dist/vendor.bundle.js"></script>
+    <script src="~/ClientApp/dist/main.bundle.js"></script>
+}
+
+
+<h1>Shop</h1>
+<app-root></app-root>
+
+@*<p>Count: @Model.Count()</p>
+
+    @foreach(var item in Model)
+    {
+        <div class="col-md-3">
+            <div class="well well-sm">
+                <img />
+                <h3>@item.Category - @item.Size</h3>
+                <ul>
+                    <li>Price: @item.Price</li>
+                    <li>Artist: @item.Artist</li>
+                    <li>Title: @item.Title</li>
+                    <li>Description: @item.ArtDesciption</li>
+                </ul>
+                <button id="btnBuy">Buy</button>
+            </div>
+
+        </div>
+
+    }*@

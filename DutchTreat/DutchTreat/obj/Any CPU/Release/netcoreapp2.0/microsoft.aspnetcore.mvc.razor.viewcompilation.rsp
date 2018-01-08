@@ -1,0 +1,14 @@
+D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat
+--output-path=obj\Any CPU\Release\netcoreapp2.0\
+--application-name=DutchTreat
+--content-root=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Pages\Error.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Pages\_ViewStart.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\Account\Login.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\App\About.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\App\Contact.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\App\Index.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\App\Shop.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\Shared\_Layout.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\_ViewImports.cshtml
+--file=D:\MyFolder\Learning\NetCore\DutchTreat\DutchTreat\Views\_ViewStart.cshtml

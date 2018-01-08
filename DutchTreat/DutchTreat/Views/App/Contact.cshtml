@@ -1,0 +1,50 @@
+﻿@model ContactViewModel
+@{
+    ViewData["Title"] = "Contact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="col-md-6 col-md-offset-3">
+    <div class="well">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name">Your Name:</label>
+                <input class="form-control" type="text" asp-for="Name" placeholder="Your name..">
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email:</label>
+                <input class="form-control" type="email" asp-for="Email" placeholder="Your last name..">
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Subject">Subject:</label>
+                <input class="form-control" type="text" asp-for="Subject" placeholder="Subject..">
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Message">Message:</label>
+                <textarea class="form-control" asp-for="Message" placeholder="Write something.." style="height:200px"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <button class="form-control btn btn-success" type="submit">Send Message</button>
+                <div class="text-success">@ViewBag.UserMessage</div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
