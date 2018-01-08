@@ -17941,11 +17941,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "D:\\MyFolder\\Learning\\NetCore\\DutchTreat\\DutchTreat\\DutchTreat.csproj",
+      "projectUniqueName": "D:\\MyFolder\\Learning\\GitHub\\NetCore2\\DutchTreat\\DutchTreat\\DutchTreat.csproj",
       "projectName": "DutchTreat",
-      "projectPath": "D:\\MyFolder\\Learning\\NetCore\\DutchTreat\\DutchTreat\\DutchTreat.csproj",
+      "projectPath": "D:\\MyFolder\\Learning\\GitHub\\NetCore2\\DutchTreat\\DutchTreat\\DutchTreat.csproj",
       "packagesPath": "C:\\Users\\thachtrinhx\\.nuget\\packages\\",
-      "outputPath": "D:\\MyFolder\\Learning\\NetCore\\DutchTreat\\DutchTreat\\obj\\",
+      "outputPath": "D:\\MyFolder\\Learning\\GitHub\\NetCore2\\DutchTreat\\DutchTreat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
